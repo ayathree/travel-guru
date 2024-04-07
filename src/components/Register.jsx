@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
 
@@ -6,6 +6,8 @@ import { AuthContext } from "../provider/AuthProvider";
 const Register = () => {
 
     const {createUser} = useContext(AuthContext);
+    const [errorRegi, setErrorRegi] = useState('')
+    const[successRegi, setSuccessRegi]= useState('')
     
 
     const handleRegister=e=>{
@@ -15,14 +17,20 @@ const Register = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
         const confirmPassword = e.target.confirmPassword.value;
+
+        setErrorRegi('');
+        setSuccessRegi('')
         
         console.log(name, email, password, confirmPassword)
         createUser(email, password)
         .then(result=>{
+          setSuccessRegi('User created successfully')
             e.target.reset();
+
             console.log(result.user)
         })
         .catch(error=>{
+          setErrorRegi(error.message)
             console.log(error)
         })
     }
@@ -57,6 +65,12 @@ const Register = () => {
           <label className="label">
             <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
           </label>
+          {
+            errorRegi && <p className="text-red-600">{errorRegi}</p>
+          }
+          {
+            successRegi && <p className="text-green-600">{successRegi}</p>
+          }
         </div>
         <div className="form-control">
           <label className="label">
